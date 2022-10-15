@@ -1,4 +1,12 @@
-import { createContext, FC, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import createPersistedState from "use-persisted-state";
 import { nanoid } from "nanoid";
 import {
   Flight,
@@ -28,10 +36,19 @@ const TripContext = createContext<TripContextProps>({
   clear: () => {},
 });
 
+const useTripState = createPersistedState<TripItem[]>("trip");
 export const useTrip = () => useContext(TripContext);
+
 export const TripConsumer = TripContext.Consumer;
 export const TripProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<TripItem[]>([]);
+  const [baseItems, setItems] = useTripState([]);
+
+  // Prevent Hydration Issues
+  const [isReady, setIsReady] = useState(false);
+  const items = isReady ? baseItems : [];
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
 
   const addItem = (item: TripItem) => setItems([...items, item]);
   const addFlight = (flight: Flight) =>

@@ -1,4 +1,12 @@
-import { createContext, FC, ReactNode, useContext, useState } from "react";
+import {
+  createContext,
+  FC,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import createPersistedState from "use-persisted-state";
 import { nanoid } from "nanoid";
 import { TripItem, Trip } from "./types";
 
@@ -16,10 +24,19 @@ const TripsContext = createContext<TripsContextProps>({
   clear: () => {},
 });
 
+const useTripsState = createPersistedState<Trip[]>("trips");
 export const useTrips = () => useContext(TripsContext);
+
 export const TripsConsumer = TripsContext.Consumer;
 export const TripsProvider: FC<{ children: ReactNode }> = ({ children }) => {
-  const [trips, setTrips] = useState<Trip[]>([]);
+  const [baseTrips, setTrips] = useTripsState([]);
+
+  // Prevent Hydration Issues
+  const [isReady, setIsReady] = useState(false);
+  const trips = isReady ? baseTrips : [];
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
 
   const addTrip = (items: TripItem[]) =>
     setTrips([...trips, { id: nanoid(), items }]);
