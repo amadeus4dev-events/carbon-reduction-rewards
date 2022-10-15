@@ -76,6 +76,12 @@ export default async function handler(
   // Get data from hotel review page
 
   // TODO scrape hotel from review page
+  // The process is as follows:
+  //     1) const page = await browser.newPage();
+  //     2) await page.goto(`https://tripadvisor.com${reviewUrl}`);
+  //     3) Use selectors in order to get the correct data. There are a total of
+  //        102 datapoints to collect! The full scraping code is available in
+  //        Python here: https://github.com/felixjhoffmann/SustainableTourism/blob/main/Code/Scraping_Listings.ipynb
 
   // Infer hotel label if not present on review page
 
