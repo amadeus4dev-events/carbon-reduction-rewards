@@ -3,6 +3,7 @@ import {
   PaperAirplaneIcon,
   TruckIcon,
 } from "@heroicons/react/24/solid";
+import { NextPage } from "next";
 import Link from "next/link";
 import { FC } from "react";
 
@@ -24,13 +25,15 @@ const AddItem: FC<AddItemProps> = ({ icon: Icon, name }) => (
         <h2 className="text-xl font-bold">{name}</h2>
       </div>
       <div className="grow flex justify-end">
-        <button className="btn btn-primary">Add</button>
+        <Link href="/itinerary/flight">
+          <a className="btn btn-primary">Add</a>
+        </Link>
       </div>
     </div>
   </div>
 );
 
-const Itinerary = () => (
+const Itinerary: NextPage = () => (
   <div className="container px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>

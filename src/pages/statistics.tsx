@@ -1,10 +1,28 @@
-const Individual = () => (
+import { NextPage } from "next";
+
+/**
+ * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
+ * Average Stats: CO_2 emitted, number of trips, money from bonuses, match donation (SAF)
+ * Trip Quota: How many trips you can still take in a year
+ *
+ * Per Trip Statistics and Aggregate Statistics
+ * Carbon Quota
+ * Cash Bonus
+ *
+ * Suggestions:
+ * Benoit 1A -> Introduce a "Standard" base line for emissions and other stats
+ * Benja AMA -> Gameification, Badges
+ * DOS 1A -> Company vs Country vs Global, Trainings / Guidelines, Make Recommendations
+ * Jegan -> Pitch: State the potential scale of our solution, Specify which open data sources we are using
+ */
+
+const Individual: NextPage = () => (
   <div className="container px-8 py-4">
     <h1 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
       Your Statistics
     </h1>
 
-    <div className="mt-8 stats shadow-lg">
+    <div className="mt-8 w-full stats shadow-lg">
       <div className="stat">
         <div className="stat-figure text-primary">
           <svg
@@ -43,8 +61,8 @@ const Individual = () => (
             ></path>
           </svg>
         </div>
-        <div className="stat-title">Trips</div>
-        <div className="stat-value text-cyan-500">2.6M</div>
+        <div className="stat-title">Trips (2022)</div>
+        <div className="stat-value text-cyan-500">4</div>
         <div className="stat-desc">14% more than your peers</div>
       </div>
       <div className="stat">
