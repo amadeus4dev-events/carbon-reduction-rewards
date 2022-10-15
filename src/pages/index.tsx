@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+import Link from 'next/link'
 
 const Home: NextPage = () => {
   return (
@@ -8,7 +9,11 @@ const Home: NextPage = () => {
         <div className="max-w-md">
           <h1 className="mb-5 text-5xl font-bold">Carbon Reduction Rewards</h1>
           <p className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-          <button className="btn btn-primary">Get Started</button>
+          <button className="btn btn-primary">
+            <Link href="itinerary/flight">
+              Get Started
+            </Link>
+          </button>
         </div>
       </div>
     </div>
