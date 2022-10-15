@@ -64,8 +64,8 @@ const Individual: NextPage = () => (
               ></path>
             </svg>
           </div>
-          <div className="stat-title">Trips</div>
-          <div className="stat-value text-cyan-500">2</div>
+          <div className="stat-title">Trips (2022)</div>
+          <div className="stat-value text-cyan-500">3</div>
           <div className="stat-desc">14% less than your peers</div>
         </div>
         <div className="stat">
@@ -81,6 +81,28 @@ const Individual: NextPage = () => (
           <div className="stat-value text-purple-500">74/100</div>
           <div className="stat-desc">12% better than your peers</div>
         </div>
+        <div className="stat">
+          <div className="stat-figure text-primary">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              className="inline-block w-8 h-8 stroke-current"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              ></path>
+            </svg>
+          </div>
+          <div className="stat-title">
+            Reward Points
+          </div>
+          <div className="stat-value text-primary">500</div>
+          <div className="stat-desc">Buy offsets, donations, or gift cards</div>
+        </div>
       </div>
       
       <div className="overflow-x-auto">
@@ -91,8 +113,8 @@ const Individual: NextPage = () => (
             <th>Trip</th> 
             <th>Avg Emissions</th> 
             <th>Your Emissions</th> 
-            <th>Percent Above or Below Avg</th> 
-            <th>Sustainability Score</th> 
+            <th>Sustainability %ile Score</th> 
+            {/* <th>Sustainability Score</th>  */}
           </tr>
         </thead> 
         <tbody>
@@ -102,7 +124,7 @@ const Individual: NextPage = () => (
             <td>100</td> 
             <td>75</td> 
             <td>-25%</td> 
-            <td>75</td> 
+            {/* <td>75</td>  */}
           </tr>
           <tr>
             <th>2</th> 
@@ -110,7 +132,7 @@ const Individual: NextPage = () => (
             <td>Desktop Support Technician</td> 
             <td>Zemlak, Daniel and Leannon</td> 
             <td>United States</td> 
-            <td>12/5/2020</td> 
+            {/* <td>12/5/2020</td>  */}
           </tr>
           <tr>
             <th>3</th> 
@@ -118,7 +140,7 @@ const Individual: NextPage = () => (
             <td>Tax Accountant</td> 
             <td>Carroll Group</td> 
             <td>China</td> 
-            <td>8/15/2020</td> 
+            {/* <td>8/15/2020</td>  */}
           </tr>
         </tbody> 
         <tfoot>
