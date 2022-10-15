@@ -3,6 +3,7 @@ import Amadeus from 'amadeus'
 import cheerio from 'cheerio'
 import axios from 'axios'
 import puppeteer from 'puppeteer'
+import hotelsDataset from '../../../data/M1HotelSustainabilityBenchmarkingIndex2021.json'
 
 const API_URL = 'https://test.api.amadeus.com/v1'
 const CLIENT_ID = 'GWu6sdFyyykYZWs53yTHu8icwwJiCOHe'
@@ -32,7 +33,9 @@ type SearchResult = {
   countryCode: string,
 }
 
-type SustainabilityResult = {}
+type SustainabilityResult = {
+  co2ePerRoom: Number | null,
+}
 
 type ResponseData = Array<SearchResult> | SustainabilityResult
 
@@ -42,12 +45,15 @@ export default async function handler(
 ) {
   const { keyword, hotelName, location } = req.query
 
-  // if a search term is present we are searching for a hotel
+  // If a search term is present we are searching for a hotel
   if (keyword) {
     const { data }: { data: Array<SearchResult> } = await amadeus.referenceData.locations.hotel.get({ keyword, subType: 'HOTEL_LEISURE' })
     res.status(200).json(data)
     return
   }
+
+  // Get carbon footprint for city from Cornell dataset
+  let co2ePerRoom = hotelsDataset.find(hotel => hotel.Location.toUpperCase() == location.toUpperCase())['All HotelsMedian'] || null
 
   // Scrape TripAdvisor
 
@@ -68,5 +74,9 @@ export default async function handler(
 
   // Get data from hotel review page
 
-  res.status(200).json({})
+  // TODO if we have the time:
+  // 1. Scrape hotel review page for hotel features
+  // 2. Use sustainability label of hotel if already present or use trained ML model to predict sustainability label
+
+  res.status(200).json({ sustainabilityLabel: true, co2ePerRoom })
 }
