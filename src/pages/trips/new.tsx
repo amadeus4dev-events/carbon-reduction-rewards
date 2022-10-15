@@ -57,6 +57,7 @@ const Trip: NextPage = () => (
     </h2>
     <div className="mt-6">
       <AddItem icon={PaperAirplaneIcon} name="Flight" service="flight" />
+      <AddItem icon={PaperAirplaneIcon} name="Train" service="train" />
       <AddItem icon={BuildingOfficeIcon} name="Accommodation" service="stay" />
       <AddItem icon={TruckIcon} name="Ground Transport" service="ground" />
     </div>
