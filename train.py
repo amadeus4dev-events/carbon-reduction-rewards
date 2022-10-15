@@ -14,9 +14,10 @@ import numpy as np
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import RandomUnderSampler
+from skl2onnx import convert_sklearn
+from skl2onnx.common.data_types import FloatTensorType
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 from sklearn.preprocessing import RobustScaler
-
 
 training_frame = pd.read_csv("data/HotelsTrainingData.csv", index_col=0)
 
@@ -29,3 +30,12 @@ y_train=np.array(training_frame['GreenLeaderBinary'])
 X_train=np.array(training_frame.drop(columns=['GreenLeaderBinary']))
 
 pipeline.fit(X_train, y_train)
+
+pipeline.steps.pop(1)
+pipeline.steps.pop(1)
+
+initial_type = [('float_input', FloatTensorType([1, 102]))]
+options = {id(pipeline): {'zipmap': False}}
+onx = convert_sklearn(pipeline, initial_types=initial_type, options=options)
+with open("data/model.onnx", "wb") as f:
+    f.write(onx.SerializeToString())
