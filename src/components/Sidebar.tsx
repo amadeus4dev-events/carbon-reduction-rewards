@@ -9,11 +9,11 @@ import {
 import Link from "next/link";
 
 const Sidebar = () => (
-  <aside className="w-64 min-h-[90vh]" aria-label="Sidebar">
-    <div className="min-h-[90vh] py-4 px-3 bg-gray-50 dark:bg-gray-900">
+  <aside className="w-64 min-h-[90vh] h-full" aria-label="Sidebar">
+    <div className="min-h-[90vh] h-full py-4 px-3 bg-gray-50 dark:bg-gray-900">
       <ul className="space-y-2">
         <li>
-          <Link href="/itinerary">
+          <Link href="/trips">
             <a className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               <PaperAirplaneIcon
                 className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"

@@ -1,17 +1,11 @@
 import type { NextPage } from "next";
-import { nanoid } from "nanoid";
 import axios from "axios";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
 import Combobox from "../../components/Combobox";
-import { useTrip } from "../../services/trips";
-
-interface Airport {
-  name: string;
-  iataCode: string;
-}
+import { useTrip, Airport } from "../../services/trips";
 
 interface FlightFormValues {
   origin: Airport;
@@ -59,8 +53,6 @@ const FlightForm = () => {
 
       if (status === 200) {
         console.log(data);
-        // kilos Co2
-        // TODO: Add trip item to store
         addFlight({
           origin,
           destination,
@@ -69,7 +61,7 @@ const FlightForm = () => {
           isReturn,
           kilosCo2: data.kilosCo2,
         });
-        router.push("/itinerary/new");
+        router.push("/trips/new");
       } else {
         // TODO: Error
       }
@@ -146,12 +138,12 @@ const Flight: NextPage = () => (
     <div className="text-sm breadcrumbs">
       <ul>
         <li>
-          <Link href="/itinerary">
+          <Link href="/trips">
             <a>Your Trips</a>
           </Link>
         </li>
         <li>
-          <Link href="/itinerary/new">
+          <Link href="/trips/new">
             <a>New Trip</a>
           </Link>
         </li>

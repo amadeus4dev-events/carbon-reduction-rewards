@@ -12,9 +12,10 @@ import TripData from "../../components/TripData";
 export interface AddItemProps {
   icon: typeof BuildingOfficeIcon;
   name: string;
+  service: string;
 }
 
-const AddItem: FC<AddItemProps> = ({ icon: Icon, name }) => (
+const AddItem: FC<AddItemProps> = ({ icon: Icon, name, service }) => (
   <div className="mt-8 bg-base-100 shadow-xl w-full px-6 py-4">
     <div className="flex items-center">
       <div className="pr-6 flex items-center">
@@ -27,7 +28,7 @@ const AddItem: FC<AddItemProps> = ({ icon: Icon, name }) => (
         <h2 className="text-xl font-bold">{name}</h2>
       </div>
       <div className="grow flex justify-end">
-        <Link href="/itinerary/flight">
+        <Link href={`/trips/${service}`}>
           <a className="btn btn-primary">Add</a>
         </Link>
       </div>
@@ -35,12 +36,12 @@ const AddItem: FC<AddItemProps> = ({ icon: Icon, name }) => (
   </div>
 );
 
-const Itinerary: NextPage = () => (
+const Trip: NextPage = () => (
   <div className="container px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>
         <li>
-          <Link href="/itinerary">
+          <Link href="/trips">
             <a>Your Trips</a>
           </Link>
         </li>
@@ -55,11 +56,11 @@ const Itinerary: NextPage = () => (
       Add Item
     </h2>
     <div className="mt-6">
-      <AddItem icon={PaperAirplaneIcon} name="Flight" />
-      <AddItem icon={BuildingOfficeIcon} name="Accommodation" />
-      <AddItem icon={TruckIcon} name="Ground Transport" />
+      <AddItem icon={PaperAirplaneIcon} name="Flight" service="flight" />
+      <AddItem icon={BuildingOfficeIcon} name="Accommodation" service="stay" />
+      <AddItem icon={TruckIcon} name="Ground Transport" service="ground" />
     </div>
   </div>
 );
 
-export default Itinerary;
+export default Trip;

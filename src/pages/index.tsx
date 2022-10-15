@@ -14,7 +14,7 @@ const Home: NextPage = () => {
             a id nisi.
           </p>
           <button className="btn btn-primary">
-            <Link href="itinerary/flight">Get Started</Link>
+            <Link href="/trips/flight">Get Started</Link>
           </button>
         </div>
       </div>
