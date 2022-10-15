@@ -1,10 +1,12 @@
 import type { NextPage } from "next";
+import { nanoid } from "nanoid";
 import axios from "axios";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
-import Router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 import Combobox from "../../components/Combobox";
+import { useTrip } from "../../services/trips";
 
 interface Airport {
   name: string;
@@ -39,13 +41,14 @@ const FlightForm = () => {
   });
   const { register, handleSubmit } = methods;
 
+  const { addItem } = useTrip();
   const onSubmit: SubmitHandler<FlightFormValues> = async ({
     origin,
     destination,
-    ...rest
+    flightNumber,
+    travelClass,
+    isReturn,
   }) => {
-    console.log({ origin, destination, ...rest });
-
     if (origin && destination) {
       const { status, data } = await axios.get("/api/flights", {
         params: {
@@ -58,6 +61,15 @@ const FlightForm = () => {
         console.log(data);
         // kilos Co2
         // TODO: Add trip item to store
+        addItem({
+          id: nanoid(),
+          origin,
+          destination,
+          flightNumber: flightNumber ?? null,
+          travelClass,
+          isReturn,
+          kilosCo2: data.kilosCo2,
+        });
         router.push("/itinerary/new");
       } else {
         // TODO: Error

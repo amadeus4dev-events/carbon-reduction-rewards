@@ -6,6 +6,13 @@ import {
 import { NextPage } from "next";
 import Link from "next/link";
 import { FC } from "react";
+import { useTrip } from "../../services/trips";
+
+const TripData = () => {
+  const { items } = useTrip();
+
+  return <div>{JSON.stringify(items)}</div>;
+};
 
 export interface AddItemProps {
   icon: typeof BuildingOfficeIcon;
@@ -50,6 +57,7 @@ const Itinerary: NextPage = () => (
     </h1>
     <div className="mt-8 rounded border-sky-800 border-2 border-dashed text-center px-8 py-16 text-xl">
       Nothing here yet. Start by adding your first trip item.
+      <TripData />
     </div>
     <div className="mt-8">
       <AddItem icon={PaperAirplaneIcon} name="Flight" />
