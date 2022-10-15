@@ -3,8 +3,11 @@ import {
   PaperAirplaneIcon,
   TruckIcon,
 } from "@heroicons/react/24/solid";
+import { NextPage } from "next";
 import Link from "next/link";
 import { FC } from "react";
+
+import TripData from "../../components/TripData";
 
 export interface AddItemProps {
   icon: typeof BuildingOfficeIcon;
@@ -24,13 +27,15 @@ const AddItem: FC<AddItemProps> = ({ icon: Icon, name }) => (
         <h2 className="text-xl font-bold">{name}</h2>
       </div>
       <div className="grow flex justify-end">
-        <button className="btn btn-primary">Add</button>
+        <Link href="/itinerary/flight">
+          <a className="btn btn-primary">Add</a>
+        </Link>
       </div>
     </div>
   </div>
 );
 
-const Itinerary = () => (
+const Itinerary: NextPage = () => (
   <div className="container px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>
@@ -45,10 +50,11 @@ const Itinerary = () => (
     <h1 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
       New Trip
     </h1>
-    <div className="mt-8 rounded border-sky-800 border-2 border-dashed text-center px-8 py-16 text-xl">
-      Nothing here yet. Start by adding your first trip item.
-    </div>
-    <div className="mt-8">
+    <TripData />
+    <h2 className="mt-8 text-xl font-bold tracking-tight text-gray-900">
+      Add Item
+    </h2>
+    <div className="mt-6">
       <AddItem icon={PaperAirplaneIcon} name="Flight" />
       <AddItem icon={BuildingOfficeIcon} name="Accommodation" />
       <AddItem icon={TruckIcon} name="Ground Transport" />

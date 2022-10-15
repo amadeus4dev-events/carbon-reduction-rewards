@@ -1,10 +1,10 @@
 import {
   ChartPieIcon,
   PaperAirplaneIcon,
-  UsersIcon,
   UserIcon,
   WrenchScrewdriverIcon,
   ArrowLeftOnRectangleIcon,
+  GlobeEuropeAfricaIcon,
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
@@ -30,7 +30,7 @@ const Sidebar = () => (
           </Link>
         </li>
         <li>
-          <Link href="/individual">
+          <Link href="/statistics">
             <a className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
               <ChartPieIcon
                 className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -43,8 +43,8 @@ const Sidebar = () => (
         <li>
           <Link href="/guide">
             <a className="flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              <UsersIcon
-                className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+              <GlobeEuropeAfricaIcon
+                className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                 fill="currentColor"
               />
               <span className="flex-1 ml-3 whitespace-nowrap">

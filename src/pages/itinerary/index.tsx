@@ -1,6 +1,7 @@
+import { NextPage } from "next";
 import Link from "next/link";
 
-const Itinerary = () => (
+const Itinerary: NextPage = () => (
   <div className="container px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>

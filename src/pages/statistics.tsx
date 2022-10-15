@@ -1,4 +1,22 @@
-const Individual = () => (
+import { NextPage } from "next";
+
+/**
+ * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
+ * Average Stats: CO_2 emitted, number of trips, money from bonuses, match donation (SAF)
+ * Trip Quota: How many trips you can still take in a year
+ *
+ * Per Trip Statistics and Aggregate Statistics
+ * Carbon Quota
+ * Cash Bonus
+ *
+ * Suggestions:
+ * Benoit 1A -> Introduce a "Standard" base line for emissions and other stats
+ * Benja AMA -> Gameification, Badges
+ * DOS 1A -> Company vs Country vs Global, Trainings / Guidelines, Make Recommendations
+ * Jegan -> Pitch: State the potential scale of our solution, Specify which open data sources we are using
+ */
+
+const Individual: NextPage = () => (
   <div className="container px-8 py-4">
     <h1 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
       Sustainability Review
@@ -101,7 +119,6 @@ const Individual = () => (
             <td>Carroll Group</td> 
             <td>China</td> 
             <td>8/15/2020</td> 
-            <td>Red</td>
           </tr>
         </tbody> 
         <tfoot>
