@@ -41,7 +41,7 @@ const FlightForm = () => {
   });
   const { register, handleSubmit } = methods;
 
-  const { addItem } = useTrip();
+  const { addFlight } = useTrip();
   const onSubmit: SubmitHandler<FlightFormValues> = async ({
     origin,
     destination,
@@ -61,8 +61,7 @@ const FlightForm = () => {
         console.log(data);
         // kilos Co2
         // TODO: Add trip item to store
-        addItem({
-          id: nanoid(),
+        addFlight({
           origin,
           destination,
           flightNumber: flightNumber ?? null,
