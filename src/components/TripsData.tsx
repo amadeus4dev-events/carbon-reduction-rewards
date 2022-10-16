@@ -34,7 +34,9 @@ const TripsData = () => {
             <tr key={id}>
               <th>{getTripName(items)}</th>
               <td>{getTripSummary(items)}</td>
-              <td className="text-right">{getTripEmissions(items)}</td>
+              <td className="text-right">
+                {getTripEmissions(items).toFixed(2)}
+              </td>
               <td className="text-right">
                 <button onClick={() => {}} className="btn btn-sm">
                   View

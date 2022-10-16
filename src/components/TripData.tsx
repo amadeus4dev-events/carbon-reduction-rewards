@@ -1,5 +1,6 @@
 import {
   BuildingOfficeIcon,
+  ChevronDoubleRightIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/24/solid";
 import { useRouter } from "next/router";
@@ -7,7 +8,11 @@ import { useRouter } from "next/router";
 import {
   Flight,
   isFlightItem,
+  isStayItem,
+  isTrainRideItem,
   Stay,
+  TrainRide,
+  TripItem,
   TripItemType,
   useTrip,
   useTrips,
@@ -32,6 +37,15 @@ const TRIP_ITEM_TYPE_COMPONENT = {
       <div className="ml-4">Stay</div>
     </div>
   ),
+  [TripItemType.TRAIN_RIDE]: (
+    <div className="flex items-center">
+      <ChevronDoubleRightIcon
+        className="flex-shrink-0 w-6 h-6 text-sky-800 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+        fill="currentColor"
+      />
+      <div className="ml-4">Train Ride</div>
+    </div>
+  ),
 };
 
 const TRAVEL_CLASS_LABELS = {
@@ -46,17 +60,18 @@ const FlightSummary = ({
   destination,
   travelClass,
   isReturn,
+  distance,
   flightNumber,
 }: Flight) => (
   <div>
     <div className="font-bold">
-      {origin.name} ({origin.iataCode}) — {destination.name} (
+      {origin.cityName} ({origin.iataCode}) — {destination.cityName} (
       {destination.iataCode})
     </div>
     <div className="text-gray-600">
       {flightNumber ? `${flightNumber} · ` : ""}
       {isReturn ? "Return" : "One-way"} · {/* @ts-ignore */}
-      {TRAVEL_CLASS_LABELS[travelClass]}
+      {TRAVEL_CLASS_LABELS[travelClass]} · {distance.toFixed(2)} km
     </div>
   </div>
 );
@@ -65,10 +80,36 @@ const StaySummary = ({ accommodation, nights }: Stay) => (
   <div>
     <div className="font-bold">{accommodation.name}</div>
     <div className="text-gray-600">
-      {accommodation.city} · {accommodation.country} · {nights} Nights
+      {accommodation.city} · {accommodation.country} · {nights} Nights{" "}
+      {accommodation.isSustainable ? " · Sustainable" : ""}
     </div>
   </div>
 );
+
+const TrainRideSummary = ({ origin, destination, distance }: TrainRide) => (
+  <div>
+    <div className="font-bold">
+      {origin.cityName} — {destination.cityName}
+    </div>
+    <div className="text-gray-600">{distance.toFixed(2)} km</div>
+  </div>
+);
+
+interface TripItemSummaryProps {
+  item: TripItem;
+}
+
+const TripItemSummary = ({ item }: TripItemSummaryProps) => {
+  if (isFlightItem(item)) {
+    return <FlightSummary {...item.data} />;
+  } else if (isStayItem(item)) {
+    return <StaySummary {...item.data} />;
+  } else if (isTrainRideItem(item)) {
+    return <TrainRideSummary {...item.data} />;
+  }
+
+  return null;
+};
 
 const TripData = () => {
   const router = useRouter();
@@ -102,13 +143,9 @@ const TripData = () => {
               <tr key={item.id}>
                 <th>{TRIP_ITEM_TYPE_COMPONENT[item.type]}</th>
                 <td>
-                  {isFlightItem(item) ? (
-                    <FlightSummary {...item.data} />
-                  ) : (
-                    <StaySummary {...item.data} />
-                  )}
+                  <TripItemSummary item={item} />
                 </td>
-                <td className="text-right">{item.data.kilosCo2}</td>
+                <td className="text-right">{item.data.kilosCo2.toFixed(2)}</td>
                 <td className="text-right">
                   <button
                     onClick={() => removeItem(item.id)}
