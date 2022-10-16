@@ -1,13 +1,6 @@
 import { NextPage } from "next";
-import {
-  getMeanFlightEmissions,
-  getMeanStayEmissions,
-  getMeanTrainRideEmissions,
-  getMeanTransportEmissions,
-  getTripsEmissions,
-  useTrips,
-} from "../services/trips";
-import { getSustainabilityScore, peerStatistics } from "../lib/mocks";
+import { useTrips } from "../services/trips";
+import { getTravelerStatistics } from "../lib/mocks";
 import { FC, ReactNode } from "react";
 
 import AwardIcon from "../components/icons/AwardIcon";
@@ -58,108 +51,25 @@ const Stat: FC<StatProps> = ({
   </div>
 );
 
-const getTravelerTier = (relativePerformance: number | null) => {
-  if (relativePerformance === null) {
-    return {
-      name: "n/a",
-      color: "inherit",
-      description: "Start adding your trips",
-      reward: "0 €",
-    };
-  }
-
-  if (relativePerformance < -0.8) {
-    return {
-      name: "Greta",
-      color: "green-500",
-      description: "You are basically Greta Thunberg",
-      reward: "250 €",
-    };
-  }
-
-  if (relativePerformance < -0.6) {
-    return {
-      name: "Platinum",
-      color: "stone-500",
-      description: "You are one of the most green travelers",
-      reward: "150 €",
-    };
-  }
-
-  if (relativePerformance < -0.4) {
-    return {
-      name: "Gold",
-      color: "yellow-500",
-      description: "You lead by example",
-      reward: "100 €",
-    };
-  }
-
-  if (relativePerformance < -0.2) {
-    return {
-      name: "Silver",
-      color: "stone-700",
-      description: "You are making an effort",
-      reward: "50 €",
-    };
-  }
-
-  if (relativePerformance < -0.0) {
-    return {
-      name: "Bronze",
-      color: "orange-700",
-      description: "You are a concious traveler",
-      reward: "25 €",
-    };
-  }
-
-  return {
-    name: "Participant",
-    color: "inherit",
-    description: "Hey, at least your tracking your emissions",
-    reward: "0 €",
-  };
-};
-
-const relativePerformance = (value: number | null, average: number | null) =>
-  value && average ? value / average - 1 : null;
-
 const formatPercentage = (value: number | null) =>
   value ? `${String((value * 100).toFixed(0))}%` : "n/a";
 
 const Statistics: NextPage = () => {
   const { trips } = useTrips();
 
-  const meanFlightEmissions = getMeanFlightEmissions(trips);
-  const meanStayEmissions = getMeanStayEmissions(trips);
-  const meanTrainRideEmissions = getMeanTrainRideEmissions(trips);
-  const meanTransportEmissions = getMeanTransportEmissions(trips);
-  const relativeTransportPerformance = relativePerformance(
-    meanTransportEmissions,
-    peerStatistics.meanTransportEmissions
-  );
-  const relativeTier = getTravelerTier(relativeTransportPerformance);
-
-  const sustainabilityScore = getSustainabilityScore(
-    meanFlightEmissions,
-    meanStayEmissions,
-    meanTrainRideEmissions
-  );
-  const emissions = getTripsEmissions(trips);
-  const numTrips = trips.length;
-  const relativeEmissionsPerformance = relativePerformance(
+  const {
+    relativeTransportPerformance,
+    relativeTier,
     emissions,
-    peerStatistics.averageEmissions
-  );
-  const relativeNumTripsPerformance = relativePerformance(
     numTrips,
-    peerStatistics.averageNumTrips
-  );
-  const absoluteTier = getTravelerTier(relativeEmissionsPerformance);
+    relativeEmissionsPerformance,
+    relativeNumTripsPerformance,
+    absoluteTier,
+  } = getTravelerStatistics(trips);
 
   return (
     <div className="container px-8 py-4">
-      <div className="hidden text-cyan-500 text-orange-700 text-green-500 text-stone-500 text-yellow-500" />
+      <div className="hidden text-primary text-cyan-500 text-orange-700 text-green-500 text-stone-500 text-yellow-500" />
       <div className="text-sm breadcrumbs">
         <ul>
           <li>Sustainability Review</li>
@@ -182,7 +92,9 @@ const Statistics: NextPage = () => {
           value={formatPercentage(relativeTransportPerformance)}
           description={
             relativeTransportPerformance
-              ? `You emit ${formatPercentage(relativeTransportPerformance)} ${
+              ? `You emit ${formatPercentage(
+                  Math.abs(relativeTransportPerformance)
+                )} ${
                   relativeTransportPerformance < 0 ? "less" : "more"
                 } per km traveled than your peers`
               : "Nothing here yet"
@@ -222,7 +134,7 @@ const Statistics: NextPage = () => {
           description={
             relativeEmissionsPerformance
               ? `You are emitting ${formatPercentage(
-                  relativeEmissionsPerformance
+                  Math.abs(relativeEmissionsPerformance)
                 )} ${
                   relativeEmissionsPerformance < 0 ? "less" : "more"
                 } than your peers`
@@ -238,7 +150,7 @@ const Statistics: NextPage = () => {
           description={
             relativeNumTripsPerformance
               ? `You are taking ${formatPercentage(
-                  relativeNumTripsPerformance
+                  Math.abs(relativeNumTripsPerformance)
                 )} ${
                   relativeNumTripsPerformance < 0 ? "less" : "more"
                 } trips than your peers`
