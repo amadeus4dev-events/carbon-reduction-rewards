@@ -143,7 +143,7 @@ const StayRecommendation = ({ accommodation: { isSustainable } }: Stay) => {
     return <>Your hotel has no sustainability certification.</>;
   }
 
-  return <>You're staying at a hotel with a sustainability label.</>;
+  return <>You&apos;re staying at a hotel with a sustainability label.</>;
 };
 
 interface TripItemRecommendation {

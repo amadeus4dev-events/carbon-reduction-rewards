@@ -36,7 +36,7 @@ const Guide = () => (
             </li>
             <li className="flex items-center space-x-1 text-green-500">
                 <AwardIcon />
-                <span>Greta Tier: <span className="font-semibold text-gray-900 dark:text-grey-400">You emit 80% less CO<sub>2</sub> than the average traveller, wow! You're the next Greta Thunberg!</span></span>
+                <span>Greta Tier: <span className="font-semibold text-gray-900 dark:text-grey-400">You emit 80% less CO<sub>2</sub> than the average traveller, wow! You&apos;re the next Greta Thunberg!</span></span>
             </li>
 
         </ul>
