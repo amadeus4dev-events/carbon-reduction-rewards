@@ -32,9 +32,11 @@ export interface FlightItem {
 
 export interface Accommodation {
   name: string;
-  city: string;
-  country: string;
+  cityName: string;
+  countryName: string;
+  countryIsoCode: string;
   isSustainable: boolean;
+  kilosCo2PerNight: number;
 }
 
 export interface Stay {

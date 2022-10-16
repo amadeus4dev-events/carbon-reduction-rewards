@@ -598,7 +598,7 @@ const airports: Airport[] = [
   {
     iataCode: "LAX",
     name: "Los Angeles International Airport",
-    cityName: "L.A.",
+    cityName: "Los Angeles",
     countryName: "United States",
     countryIsoCode: "US",
     latitude: 33.942803,

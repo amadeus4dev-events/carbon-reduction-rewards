@@ -134,11 +134,13 @@ const AccommodationSelect = ({ nights, results }: AccommodationSelectProps) => {
                       addStay({
                         accommodation: {
                           name: toTitleCase(result.name),
-                          city: toTitleCase(result.address.cityName),
-                          country:
+                          cityName: toTitleCase(result.address.cityName),
+                          countryName:
                             // @ts-ignore
                             countriesByCode[result.address.countryCode] ?? "",
+                          countryIsoCode: result.address.countryCode,
                           isSustainable: data.isSustainable,
+                          kilosCo2PerNight: data.kilosCo2PerNight,
                         },
                         nights,
                         kilosCo2: nights * data.kilosCo2PerNight,

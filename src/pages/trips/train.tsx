@@ -37,6 +37,7 @@ const TrainForm = () => {
         params: {
           origin: origin.cityName,
           destination: destination.cityName,
+          isReturn,
         },
       });
 

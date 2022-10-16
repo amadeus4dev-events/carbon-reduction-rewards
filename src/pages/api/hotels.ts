@@ -28,8 +28,6 @@ export type SearchResult = {
   id: number;
   name: string;
   iataCode: string;
-  cityName: string;
-  countryCode: string;
   address: {
     cityName: string;
     countryCode: string;
@@ -55,13 +53,19 @@ export default async function handler(
 
   // If a search term is present we are searching for a hotel
   if (keyword) {
-    const { data }: { data: Array<SearchResult> } =
-      await amadeus.referenceData.locations.hotel.get({
-        keyword,
-        subType: "HOTEL_LEISURE",
-      });
-    res.status(200).json(data);
-    return;
+    try {
+      const { data }: { data: Array<SearchResult> } =
+        await amadeus.referenceData.locations.hotel.get({
+          keyword,
+          subType: "HOTEL_LEISURE",
+        });
+
+      res.status(200).json(data);
+      return;
+    } catch {
+      res.status(404).json({ msg: "Unable to find hotels for this city" });
+      return;
+    }
   }
 
   if (typeof cityName !== "string") {

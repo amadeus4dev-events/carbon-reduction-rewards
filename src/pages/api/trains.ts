@@ -58,7 +58,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  let { origin = "", destination = "" } = req.query;
+  let { origin = "", destination = "", isReturn = false } = req.query;
   // origin = (origin as string).toUpperCase();
   // destination = (destination as string).toUpperCase();
 
@@ -90,8 +90,9 @@ export default async function handler(
     },
   });
 
-  const kilosCo2 =
-    data.kilosCo2 ?? data.kilosCo2e ?? data.km * AVERAGE_KG_PER_KM;
+  const multiplier = Number(isReturn) + 1;
+  let kilosCo2 = data.kilosCo2 ?? data.kilosCo2e ?? data.km * AVERAGE_KG_PER_KM;
+  kilosCo2 = kilosCo2 * multiplier;
 
   res.status(200).json({ ...data, kilosCo2: kilosCo2, distance: data.km });
 }

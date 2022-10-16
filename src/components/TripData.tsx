@@ -80,7 +80,7 @@ const StaySummary = ({ accommodation, nights }: Stay) => (
   <div>
     <div className="font-bold">{accommodation.name}</div>
     <div className="text-gray-600">
-      {accommodation.city} · {accommodation.country} · {nights} Nights{" "}
+      {accommodation.cityName} · {accommodation.countryName} · {nights} Nights{" "}
       {accommodation.isSustainable ? " · Sustainable" : ""}
     </div>
   </div>

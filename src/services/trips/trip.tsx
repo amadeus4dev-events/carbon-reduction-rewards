@@ -100,7 +100,7 @@ export const getTripName = (items: TripItem[]) => {
   if (isFlightItem(item)) {
     return `From ${item.data.origin.name} to ${item.data.destination.name}`;
   } else if (isStayItem(item)) {
-    return `Trip to ${item.data.accommodation.city}`;
+    return `Trip to ${item.data.accommodation.cityName}`;
   } else if (isTrainRideItem(item)) {
     return `From ${item.data.origin.cityName} to ${item.data.destination.cityName}`;
   }

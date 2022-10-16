@@ -47,7 +47,7 @@ export default async function handler(
     flightNumber,
     travelClass = "business",
     passengers = 1,
-    roundTrip = false,
+    isReturn = false,
   } = req.query;
   if (typeof origin !== "string" || typeof destination !== "string") {
     res
@@ -63,6 +63,7 @@ export default async function handler(
     endpoint = `${API_URL}/footprint/flights/${origin}/${destination}/${flightNumber}`;
   }
 
+  const roundTrip = isReturn === "true";
   const { data } = await axios.get(endpoint, {
     params: {
       travelClass,
@@ -74,7 +75,8 @@ export default async function handler(
     },
   });
 
-  const distance = getDistance(origin, destination) * (Number(roundTrip) + 1);
+  const multiplier = Number(roundTrip) + 1;
+  const distance = getDistance(origin, destination) * multiplier;
 
   res.status(200).json({ ...data, distance });
 }

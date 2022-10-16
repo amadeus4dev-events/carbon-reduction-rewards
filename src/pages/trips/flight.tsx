@@ -42,6 +42,8 @@ const FlightForm = () => {
         params: {
           origin: origin.iataCode,
           destination: destination.iataCode,
+          travelClass,
+          isReturn,
         },
       });
 
