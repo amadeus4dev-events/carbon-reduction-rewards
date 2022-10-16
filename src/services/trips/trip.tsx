@@ -12,8 +12,10 @@ import {
   Flight,
   isFlightItem,
   isStayItem,
+  isTrainRideItem,
   Stay,
   StayItem,
+  TrainRide,
   TripItem,
   TripItemType,
 } from "./types";
@@ -23,6 +25,7 @@ export type TripContextProps = {
   addItem: (item: TripItem) => void;
   addFlight: (flight: Flight) => void;
   addStay: (stay: Stay) => void;
+  addTrainRide: (trainRide: TrainRide) => void;
   removeItem: (id: string) => void;
   clear: () => void;
 };
@@ -32,6 +35,7 @@ const TripContext = createContext<TripContextProps>({
   addItem: (item: TripItem) => {},
   addFlight: (flight: Flight) => {},
   addStay: (stay: Stay) => {},
+  addTrainRide: (trainRide: TrainRide) => {},
   removeItem: (id: string) => {},
   clear: () => {},
 });
@@ -58,6 +62,11 @@ export const TripProvider: FC<{ children: ReactNode }> = ({ children }) => {
     ]);
   const addStay = (stay: Stay) =>
     setItems([...items, { id: nanoid(), type: TripItemType.STAY, data: stay }]);
+  const addTrainRide = (trainRide: TrainRide) =>
+    setItems([
+      ...items,
+      { id: nanoid(), type: TripItemType.TRAIN_RIDE, data: trainRide },
+    ]);
 
   const removeItem = (id: string) =>
     setItems(items.filter((item) => item.id !== id));
@@ -66,7 +75,15 @@ export const TripProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
   return (
     <TripContext.Provider
-      value={{ items, addItem, addFlight, addStay, removeItem, clear }}
+      value={{
+        items,
+        addItem,
+        addFlight,
+        addStay,
+        addTrainRide,
+        removeItem,
+        clear,
+      }}
     >
       {children}
     </TripContext.Provider>
@@ -82,8 +99,10 @@ export const getTripName = (items: TripItem[]) => {
 
   if (isFlightItem(item)) {
     return `From ${item.data.origin.name} to ${item.data.destination.name}`;
-  } else {
-    return `Trip to ${item.data.accommodation.city}`;
+  } else if (isStayItem(item)) {
+    return `Trip to ${item.data.accommodation.cityName}`;
+  } else if (isTrainRideItem(item)) {
+    return `From ${item.data.origin.cityName} to ${item.data.destination.cityName}`;
   }
 };
 
@@ -98,6 +117,7 @@ export const getTripSummary = (items: TripItem[]) => {
     (numNights, item) => numNights + item.data.nights,
     0
   );
+  const numTrainRides = items.filter((item) => isTrainRideItem(item)).length;
 
   const summaryItems = [];
 
@@ -105,6 +125,12 @@ export const getTripSummary = (items: TripItem[]) => {
     summaryItems.push("1 flight");
   } else if (numFlights > 1) {
     summaryItems.push(`${numFlights} flights`);
+  }
+
+  if (numTrainRides === 1) {
+    summaryItems.push("1 train ride");
+  } else if (numTrainRides > 1) {
+    summaryItems.push(`${numTrainRides} train rides`);
   }
 
   if (numNights === 1) {

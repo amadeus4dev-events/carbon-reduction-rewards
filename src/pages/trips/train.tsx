@@ -8,51 +8,43 @@ import Combobox from "../../components/Combobox";
 import { useTrip, Airport } from "../../services/trips";
 import airports from "../../lib/airports";
 
-interface FlightFormValues {
+interface TrainFormValues {
   origin: Airport;
   destination: Airport;
-  flightNumber: string;
-  travelClass: string;
   isReturn: boolean;
 }
 
-const displayValue = (a: Airport) => (a ? `${a.name} (${a.iataCode})` : "");
+const displayValue = (a: Airport) => (a ? a.cityName : "");
 const getKey = ({ iataCode }: Airport) => iataCode;
 
-const FlightForm = () => {
+const TrainForm = () => {
   const router = useRouter();
-  const methods = useForm<FlightFormValues>({
+  const methods = useForm<TrainFormValues>({
     defaultValues: {
-      travelClass: "economy",
       isReturn: false,
     },
   });
   const { register, handleSubmit } = methods;
 
-  const { addFlight } = useTrip();
-  const onSubmit: SubmitHandler<FlightFormValues> = async ({
+  const { addTrainRide } = useTrip();
+  const onSubmit: SubmitHandler<TrainFormValues> = async ({
     origin,
     destination,
-    flightNumber,
-    travelClass,
     isReturn,
   }) => {
     if (origin && destination) {
-      const { status, data } = await axios.get("/api/flights", {
+      const { status, data } = await axios.get("/api/trains", {
         params: {
-          origin: origin.iataCode,
-          destination: destination.iataCode,
-          travelClass,
+          origin: origin.cityName,
+          destination: destination.cityName,
           isReturn,
         },
       });
 
       if (status === 200) {
-        addFlight({
+        addTrainRide({
           origin,
           destination,
-          flightNumber: flightNumber ?? null,
-          travelClass,
           isReturn,
           distance: data.distance,
           kilosCo2: data.kilosCo2,
@@ -91,31 +83,6 @@ const FlightForm = () => {
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">Flight Number (optional)</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Flight Number"
-            className="input input-bordered w-full max-w-xs"
-            {...register("flightNumber")}
-          />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Travel Class</span>
-          </label>
-          <select
-            className="select w-full max-w-xs"
-            {...register("travelClass")}
-          >
-            <option value="economy">Economy</option>
-            <option value="premium">Premium Economy</option>
-            <option value="business">Business</option>
-            <option value="First">First</option>
-          </select>
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
             <span className="label-text">Is Return?</span>
           </label>
           <input type="checkbox" className="toggle" {...register("isReturn")} />
@@ -129,7 +96,7 @@ const FlightForm = () => {
   );
 };
 
-const Flight: NextPage = () => (
+const Train: NextPage = () => (
   <div className="container px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>
@@ -143,14 +110,14 @@ const Flight: NextPage = () => (
             <a>New Trip</a>
           </Link>
         </li>
-        <li>Add Flight</li>
+        <li>Add Train</li>
       </ul>
     </div>
     <h1 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-      Add Flight
+      Add Train
     </h1>
-    <FlightForm />
+    <TrainForm />
   </div>
 );
 
-export default Flight;
+export default Train;

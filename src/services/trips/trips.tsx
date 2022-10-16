@@ -8,7 +8,15 @@ import {
 } from "react";
 import createPersistedState from "use-persisted-state";
 import { nanoid } from "nanoid";
-import { TripItem, Trip } from "./types";
+import { mean } from "simple-statistics";
+import {
+  TripItem,
+  Trip,
+  isFlightItem,
+  isStayItem,
+  isTrainRideItem,
+} from "./types";
+import { getTripEmissions } from "./trip";
 
 export type TripsContextProps = {
   trips: Trip[];
@@ -51,4 +59,36 @@ export const TripsProvider: FC<{ children: ReactNode }> = ({ children }) => {
       {children}
     </TripsContext.Provider>
   );
+};
+
+export const getTripsEmissions = (trips: Trip[]) =>
+  trips.reduce((sum, trip) => sum + getTripEmissions(trip.items), 0);
+
+const selectTripItems = (trips: Trip[]) => trips.flatMap((trip) => trip.items);
+
+export const getMeanFlightEmissions = (trips: Trip[]) => {
+  const flightItems = selectTripItems(trips).filter(isFlightItem);
+  return flightItems.length === 0
+    ? null
+    : mean(
+        flightItems.map(({ data: flight }) => flight.kilosCo2 / flight.distance)
+      );
+};
+
+export const getMeanStayEmissions = (trips: Trip[]) => {
+  const stayItems = selectTripItems(trips).filter(isStayItem);
+  return stayItems.length === 0
+    ? null
+    : mean(stayItems.map(({ data: stay }) => stay.kilosCo2 / stay.nights));
+};
+
+export const getMeanTrainRideEmissions = (trips: Trip[]) => {
+  const trainRideItems = selectTripItems(trips).filter(isTrainRideItem);
+  return trainRideItems.length === 0
+    ? null
+    : mean(
+        trainRideItems.map(
+          ({ data: trainRide }) => trainRide.kilosCo2 / trainRide.distance
+        )
+      );
 };

@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import { useTrip } from "../../services/trips";
 import Link from "next/link";
-import { SearchResult } from "../api/hotels";
+import { SearchResult, SustainabilityResult } from "../api/hotels";
 import toTitleCase from "../../lib/toTitleCase";
 import { useState } from "react";
 import countriesByCode from "../../lib/countriesByCode";
@@ -29,7 +29,6 @@ const StayForm = ({ setNights, setResults }: StayFormProps) => {
   });
   const { register, handleSubmit } = methods;
 
-  const { addStay } = useTrip();
   const onSubmit: SubmitHandler<StayFormValues> = async ({
     nights,
     keyword,
@@ -40,10 +39,8 @@ const StayForm = ({ setNights, setResults }: StayFormProps) => {
           keyword,
         },
       });
-      console.log(status, data);
 
       if (status === 200) {
-        console.log(data);
         setNights(nights);
         setResults(data);
       } else {
@@ -125,20 +122,30 @@ const AccommodationSelect = ({ nights, results }: AccommodationSelectProps) => {
               <td>{toTitleCase(result.address.cityName)}</td>
               <td className="text-right">
                 <button
-                  onClick={() => {
-                    addStay({
-                      accommodation: {
-                        name: toTitleCase(result.name),
+                  onClick={async () => {
+                    const { status, data } =
+                      await axios.get<SustainabilityResult>("/api/hotels", {
+                        params: { cityName: result.address.cityName },
+                      });
 
-                        city: toTitleCase(result.address.cityName),
-                        country:
-                          // @ts-ignore
-                          countriesByCode[result.address.countryCode] ?? "",
-                        isSustainable: true,
-                      },
-                      nights,
-                      kilosCo2: 103.52,
-                    });
+                    if (status === 200) {
+                      addStay({
+                        accommodation: {
+                          name: toTitleCase(result.name),
+                          cityName: toTitleCase(result.address.cityName),
+                          countryName:
+                            // @ts-ignore
+                            countriesByCode[result.address.countryCode] ?? "",
+                          countryIsoCode: result.address.countryCode,
+                          isSustainable: data.isSustainable,
+                          kilosCo2PerNight: data.kilosCo2PerNight,
+                        },
+                        nights,
+                        kilosCo2: nights * data.kilosCo2PerNight,
+                      });
+                    } else {
+                      // TODO error
+                    }
                     router.push("/trips/new");
                   }}
                   className="btn btn-sm btn-primary"

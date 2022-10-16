@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
+import getDistance from "../../lib/getDistance";
 
 const AUTH_URL =
   "https://login.microsoftonline.com/04300fc2-8f04-4555-9a5d-c6fac7f23d0c/oauth2/token";
@@ -30,8 +31,9 @@ type ErrorData = {
 
 type ResponseData =
   | {
-      kilosCo2: Number;
-      kilosCo2e: Number;
+      distance: number;
+      kilosCo2: number;
+      kilosCo2e: number;
     }
   | ErrorData;
 
@@ -45,9 +47,9 @@ export default async function handler(
     flightNumber,
     travelClass = "business",
     passengers = 1,
-    roundTrip = false,
+    isReturn = false,
   } = req.query;
-  if (!origin || !destination) {
+  if (typeof origin !== "string" || typeof destination !== "string") {
     res
       .status(400)
       .json({ msg: "Please specify origin and destination iata codes" });
@@ -61,6 +63,7 @@ export default async function handler(
     endpoint = `${API_URL}/footprint/flights/${origin}/${destination}/${flightNumber}`;
   }
 
+  const roundTrip = isReturn === "true";
   const { data } = await axios.get(endpoint, {
     params: {
       travelClass,
@@ -72,5 +75,8 @@ export default async function handler(
     },
   });
 
-  res.status(200).json(data);
+  const multiplier = Number(roundTrip) + 1;
+  const distance = getDistance(origin, destination) * multiplier;
+
+  res.status(200).json({ ...data, distance });
 }

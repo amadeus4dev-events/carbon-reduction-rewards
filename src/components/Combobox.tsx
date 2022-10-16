@@ -15,7 +15,6 @@ const Combobox = <T, N extends string = string>({
   getKey,
   name,
 }: ComboboxProps<T, N>) => {
-  // const [selectedOption, setSelectedOption] = useState(options[0]);
   const {
     field: { value, onChange, onBlur },
   } = useController({ name });
@@ -23,12 +22,12 @@ const Combobox = <T, N extends string = string>({
 
   const filteredOptions =
     query === ""
-      ? options
-      : options.filter((option) => {
-          return displayValue(option)
-            .toLowerCase()
-            .includes(query.toLowerCase());
-        });
+      ? options.slice(0, 5)
+      : options
+          .filter((option) =>
+            displayValue(option).toLowerCase().includes(query.toLowerCase())
+          )
+          .slice(0, 5);
 
   return (
     <div className="dropdown">
