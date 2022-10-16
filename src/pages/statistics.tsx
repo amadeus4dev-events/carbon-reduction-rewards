@@ -158,6 +158,7 @@ const Statistics: NextPage = () => {
 
   return (
     <div className="container px-8 py-4">
+      <div className="hidden text-cyan-500 text-orange-700 text-green-500 text-stone-500 text-yellow-500" />
       <div className="text-sm breadcrumbs">
         <ul>
           <li>Sustainability Review</li>
@@ -261,56 +262,7 @@ const Statistics: NextPage = () => {
           color="cyan-500"
           icon={AirplaneIcon}
         />
-        {/* <Stat
-          title="Reward Points"
-          value="400"
-          description="Buy offsets, donations, gift cards"
-          color="primary"
-          icon={AwardIcon}
-        /> */}
       </div>
-
-      {/* <div className="overflow-x-auto">
-        <table className="table table-compact w-full">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Trip</th>
-              <th>Avg Emissions</th>
-              <th>Your Emissions</th>
-              <th>Sustainability %ile Score</th>
-              {/* <th>Sustainability Score</th>  
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>1</th>
-              <td>AMS to LDN</td>
-              <td>100</td>
-              <td>75</td>
-              <td>-25%</td>
-              {/* <td>75</td>  
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>Hart Hagerty</td>
-              <td>Desktop Support Technician</td>
-              <td>Zemlak, Daniel and Leannon</td>
-              <td>United States</td>
-              {/* <td>12/5/2020</td>  
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>Brice Swyre</td>
-              <td>Tax Accountant</td>
-              <td>Carroll Group</td>
-              <td>China</td>
-              {/* <td>8/15/2020</td>  
-            </tr>
-          </tbody>
-          <tfoot></tfoot>
-        </table>
-      </div> */}
     </div>
   );
 };
