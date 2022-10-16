@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+// @ts-ignore
 import Amadeus from "amadeus";
 import puppeteer from "puppeteer";
 import baseHotelsDataset from "../../../data/M1HotelSustainabilityBenchmarkingIndex2021.json";
