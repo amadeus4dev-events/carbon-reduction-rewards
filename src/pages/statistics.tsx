@@ -13,6 +13,7 @@ import { FC, ReactNode } from "react";
 import AwardIcon from "../components/icons/AwardIcon";
 import LungsIcon from "../components/icons/LungsIcon";
 import AirplaneIcon from "../components/icons/AirplaneIcon";
+import MoneyIcon from "../components/icons/MoneyIcon";
 
 /**
  * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
@@ -203,7 +204,7 @@ const Statistics: NextPage = () => {
           value={relativeTier.reward}
           description="You earned it"
           color="cyan-500"
-          icon={AirplaneIcon}
+          icon={MoneyIcon}
         />
       </div>
 
@@ -260,7 +261,7 @@ const Statistics: NextPage = () => {
           value={absoluteTier.reward}
           description="You earned it"
           color="cyan-500"
-          icon={AirplaneIcon}
+          icon={MoneyIcon}
         />
       </div>
     </div>
