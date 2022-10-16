@@ -3,7 +3,7 @@ import Link from "next/link";
 import TripsData from "../../components/TripsData";
 
 const Trips: NextPage = () => (
-  <div className="container px-8 py-4">
+  <div className="px-8 py-4">
     <div className="text-sm breadcrumbs">
       <ul>
         <li>Your Trips</li>

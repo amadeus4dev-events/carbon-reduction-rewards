@@ -144,3 +144,26 @@ export const getTripSummary = (items: TripItem[]) => {
 
 export const getTripEmissions = (items: TripItem[]) =>
   items.reduce((kilos, item) => kilos + item.data.kilosCo2, 0);
+
+// Global averages calculated by Monte-Carlo Simulation
+const EMISSIONS_PER_FLIGHT_KM = 0.19331812308622404;
+const EMISSIONS_PER_TRAIN_RIDE_KM = 0.016065000000000006;
+const EMISSIONS_PER_NIGHT = 32.51772755039711;
+
+export const getAverageTripEmissions = (items: TripItem[]) => {
+  const flightDistance = items
+    .filter(isFlightItem)
+    .reduce((sum, { data }) => sum + data.distance, 0);
+  const trainDistance = items
+    .filter(isTrainRideItem)
+    .reduce((sum, { data }) => sum + data.distance, 0);
+  const numNights = items
+    .filter(isStayItem)
+    .reduce((numNights, item) => numNights + item.data.nights, 0);
+
+  return (
+    flightDistance * EMISSIONS_PER_FLIGHT_KM +
+    trainDistance * EMISSIONS_PER_TRAIN_RIDE_KM +
+    numNights * EMISSIONS_PER_NIGHT
+  );
+};

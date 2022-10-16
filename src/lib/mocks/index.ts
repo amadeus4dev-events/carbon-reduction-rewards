@@ -188,8 +188,10 @@ export const getTravelerTier = (relativePerformance: number | null) => {
   };
 };
 
-const relativePerformance = (value: number | null, average: number | null) =>
-  value && average ? value / average - 1 : null;
+export const relativePerformance = (
+  value: number | null,
+  average: number | null
+) => (value && average ? value / average - 1 : null);
 
 export const getTravelerStatistics = (trips: Trip[]) => {
   const meanTransportEmissions = getMeanTransportEmissions(trips);

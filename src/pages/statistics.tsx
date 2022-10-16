@@ -7,6 +7,7 @@ import AwardIcon from "../components/icons/AwardIcon";
 import LungsIcon from "../components/icons/LungsIcon";
 import AirplaneIcon from "../components/icons/AirplaneIcon";
 import MoneyIcon from "../components/icons/MoneyIcon";
+import formatPercentage from "../lib/formatPercentage";
 
 /**
  * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
@@ -50,9 +51,6 @@ const Stat: FC<StatProps> = ({
     <div className="stat-desc">{description}</div>
   </div>
 );
-
-const formatPercentage = (value: number | null) =>
-  value ? `${String((value * 100).toFixed(0))}%` : "n/a";
 
 const Statistics: NextPage = () => {
   const { trips } = useTrips();
