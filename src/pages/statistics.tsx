@@ -3,6 +3,7 @@ import {
   getMeanFlightEmissions,
   getMeanStayEmissions,
   getMeanTrainRideEmissions,
+  getMeanTransportEmissions,
   getTripsEmissions,
   useTrips,
 } from "../services/trips";
@@ -12,8 +13,6 @@ import { FC, ReactNode } from "react";
 import AwardIcon from "../components/icons/AwardIcon";
 import LungsIcon from "../components/icons/LungsIcon";
 import AirplaneIcon from "../components/icons/AirplaneIcon";
-import TreeIcon from "../components/icons/TreeIcon";
-import HouseIcon from "../components/icons/HouseIcon";
 
 /**
  * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
@@ -29,6 +28,8 @@ import HouseIcon from "../components/icons/HouseIcon";
  * Benja AMA -> Gameification, Badges
  * DOS 1A -> Company vs Country vs Global, Trainings / Guidelines, Make Recommendations
  * Jegan -> Pitch: State the potential scale of our solution, Specify which open data sources we are using
+ *
+ * Eco-friendliness of the code can be part of the questions
  */
 
 interface StatProps {
@@ -56,10 +57,74 @@ const Stat: FC<StatProps> = ({
   </div>
 );
 
+const getTravelerTier = (relativePerformance: number | null) => {
+  if (relativePerformance === null) {
+    return {
+      name: "n/a",
+      color: "inherit",
+      description: "Start adding your trips",
+      reward: "0 €",
+    };
+  }
+
+  if (relativePerformance < -0.8) {
+    return {
+      name: "Greta",
+      color: "green-500",
+      description: "You are basically Greta Thunberg",
+      reward: "250 €",
+    };
+  }
+
+  if (relativePerformance < -0.6) {
+    return {
+      name: "Platinum",
+      color: "stone-500",
+      description: "You are one of the most green travelers",
+      reward: "150 €",
+    };
+  }
+
+  if (relativePerformance < -0.4) {
+    return {
+      name: "Gold",
+      color: "yellow-500",
+      description: "You lead by example",
+      reward: "100 €",
+    };
+  }
+
+  if (relativePerformance < -0.2) {
+    return {
+      name: "Silver",
+      color: "stone-700",
+      description: "You are making an effort",
+      reward: "50 €",
+    };
+  }
+
+  if (relativePerformance < -0.0) {
+    return {
+      name: "Bronze",
+      color: "orange-700",
+      description: "You are a concious traveler",
+      reward: "25 €",
+    };
+  }
+
+  return {
+    name: "Participant",
+    color: "inherit",
+    description: "Hey, at least your tracking your emissions",
+    reward: "0 €",
+  };
+};
+
 const relativePerformance = (value: number | null, average: number | null) =>
-  value && average
-    ? `${String(((1 - value / average) * 100).toFixed(0))}%`
-    : "n/a";
+  value && average ? value / average - 1 : null;
+
+const formatPercentage = (value: number | null) =>
+  value ? `${String((value * 100).toFixed(0))}%` : "n/a";
 
 const Statistics: NextPage = () => {
   const { trips } = useTrips();
@@ -67,6 +132,13 @@ const Statistics: NextPage = () => {
   const meanFlightEmissions = getMeanFlightEmissions(trips);
   const meanStayEmissions = getMeanStayEmissions(trips);
   const meanTrainRideEmissions = getMeanTrainRideEmissions(trips);
+  const meanTransportEmissions = getMeanTransportEmissions(trips);
+  const relativeTransportPerformance = relativePerformance(
+    meanTransportEmissions,
+    peerStatistics.meanTransportEmissions
+  );
+  const relativeTier = getTravelerTier(relativeTransportPerformance);
+
   const sustainabilityScore = getSustainabilityScore(
     meanFlightEmissions,
     meanStayEmissions,
@@ -74,6 +146,15 @@ const Statistics: NextPage = () => {
   );
   const emissions = getTripsEmissions(trips);
   const numTrips = trips.length;
+  const relativeEmissionsPerformance = relativePerformance(
+    emissions,
+    peerStatistics.averageEmissions
+  );
+  const relativeNumTripsPerformance = relativePerformance(
+    numTrips,
+    peerStatistics.averageNumTrips
+  );
+  const absoluteTier = getTravelerTier(relativeEmissionsPerformance);
 
   return (
     <div className="container px-8 py-4">
@@ -90,41 +171,44 @@ const Statistics: NextPage = () => {
       <h2 className="mt-6 text-2xl font-bold dark:text-grey-400">
         Your Impact
       </h2>
-      <div className="w-full mt-4 stats shadow-lg">
+      <h2 className="mt-4 text-xl font-bold dark:text-grey-400">
+        Relative Performance
+      </h2>
+      <div className="mt-4 w-full stats shadow-lg">
         <Stat
-          title="Relative Flight Performance"
-          value={relativePerformance(
-            meanFlightEmissions,
-            peerStatistics.meanFlightEmissions
-          )}
-          description="You emit less per km flown"
+          title="Relative Travel Performance"
+          value={formatPercentage(relativeTransportPerformance)}
+          description={
+            relativeTransportPerformance
+              ? `You emit ${formatPercentage(relativeTransportPerformance)} ${
+                  relativeTransportPerformance < 0 ? "less" : "more"
+                } per km traveled than your peers`
+              : "Nothing here yet"
+          }
           color="primary"
           icon={AirplaneIcon}
         />
 
         <Stat
-          title="Relative Hotel Performance"
-          value={relativePerformance(
-            meanStayEmissions,
-            peerStatistics.meanStayEmissions
-          )}
-          description="You are choosing more sustainable hotels"
-          color="purple-500"
-          icon={HouseIcon}
+          title="Your Tier"
+          value={relativeTier.name}
+          description={relativeTier.description}
+          color={relativeTier.color}
+          icon={AwardIcon}
         />
 
         <Stat
-          title="Relative Train Performance"
-          value={relativePerformance(
-            meanTrainRideEmissions,
-            peerStatistics.meanTrainRideEmissions
-          )}
-          description="You emit less per km traveled"
+          title="Your Reward"
+          value={relativeTier.reward}
+          description="You earned it"
           color="cyan-500"
           icon={AirplaneIcon}
         />
       </div>
 
+      <h2 className="mt-6 text-xl font-bold dark:text-grey-400">
+        Absolute Performance
+      </h2>
       <div className="w-full mt-4 stats shadow-lg">
         <Stat
           title={
@@ -133,10 +217,15 @@ const Statistics: NextPage = () => {
             </>
           }
           value={emissions.toFixed(1)}
-          description={`${relativePerformance(
-            emissions,
-            peerStatistics.averageEmissions
-          )} less than your peers`}
+          description={
+            relativeEmissionsPerformance
+              ? `You are emitting ${formatPercentage(
+                  relativeEmissionsPerformance
+                )} ${
+                  relativeEmissionsPerformance < 0 ? "less" : "more"
+                } than your peers`
+              : "Nothing here yet"
+          }
           color="primary"
           icon={LungsIcon}
         />
@@ -144,26 +233,35 @@ const Statistics: NextPage = () => {
         <Stat
           title="Trips (2022)"
           value={numTrips}
-          description={`${relativePerformance(
-            numTrips,
-            peerStatistics.averageNumTrips
-          )} less than your peers`}
+          description={
+            relativeNumTripsPerformance
+              ? `You are taking ${formatPercentage(
+                  relativeNumTripsPerformance
+                )} ${
+                  relativeNumTripsPerformance < 0 ? "less" : "more"
+                } trips than your peers`
+              : "Nothing here yet"
+          }
           color="cyan-500"
           icon={AirplaneIcon}
         />
-
+      </div>
+      <div className="w-full stats shadow-lg">
         <Stat
-          title="Sustainability Score"
-          value={`${sustainabilityScore}/100`}
-          description={`${relativePerformance(
-            sustainabilityScore,
-            peerStatistics.meanSustainabilityScore
-          )} better than your peers`}
-          color="purple-500"
-          icon={TreeIcon}
+          title="Your Tier"
+          value={absoluteTier.name}
+          description={absoluteTier.description}
+          color={absoluteTier.color}
+          icon={AwardIcon}
         />
-        {/* 
         <Stat
+          title="Your Reward"
+          value={absoluteTier.reward}
+          description="You earned it"
+          color="cyan-500"
+          icon={AirplaneIcon}
+        />
+        {/* <Stat
           title="Reward Points"
           value="400"
           description="Buy offsets, donations, gift cards"
@@ -172,7 +270,7 @@ const Statistics: NextPage = () => {
         /> */}
       </div>
 
-      <div className="overflow-x-auto">
+      {/* <div className="overflow-x-auto">
         <table className="table table-compact w-full">
           <thead>
             <tr>
@@ -181,7 +279,7 @@ const Statistics: NextPage = () => {
               <th>Avg Emissions</th>
               <th>Your Emissions</th>
               <th>Sustainability %ile Score</th>
-              {/* <th>Sustainability Score</th>  */}
+              {/* <th>Sustainability Score</th>  
             </tr>
           </thead>
           <tbody>
@@ -191,7 +289,7 @@ const Statistics: NextPage = () => {
               <td>100</td>
               <td>75</td>
               <td>-25%</td>
-              {/* <td>75</td>  */}
+              {/* <td>75</td>  
             </tr>
             <tr>
               <th>2</th>
@@ -199,7 +297,7 @@ const Statistics: NextPage = () => {
               <td>Desktop Support Technician</td>
               <td>Zemlak, Daniel and Leannon</td>
               <td>United States</td>
-              {/* <td>12/5/2020</td>  */}
+              {/* <td>12/5/2020</td>  
             </tr>
             <tr>
               <th>3</th>
@@ -207,12 +305,12 @@ const Statistics: NextPage = () => {
               <td>Tax Accountant</td>
               <td>Carroll Group</td>
               <td>China</td>
-              {/* <td>8/15/2020</td>  */}
+              {/* <td>8/15/2020</td>  
             </tr>
           </tbody>
           <tfoot></tfoot>
         </table>
-      </div>
+      </div> */}
     </div>
   );
 };

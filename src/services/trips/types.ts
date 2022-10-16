@@ -77,6 +77,11 @@ export const isStayItem = (item: TripItem): item is StayItem =>
 export const isTrainRideItem = (item: TripItem): item is TrainRideItem =>
   item.type === TripItemType.TRAIN_RIDE;
 
+export const isTransportItem = (
+  item: TripItem
+): item is FlightItem | TrainRideItem =>
+  isFlightItem(item) || isTrainRideItem(item);
+
 export type Trip = {
   id: string;
   items: TripItem[];

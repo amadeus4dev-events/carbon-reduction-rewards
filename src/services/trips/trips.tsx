@@ -15,6 +15,7 @@ import {
   isFlightItem,
   isStayItem,
   isTrainRideItem,
+  isTransportItem,
 } from "./types";
 import { getTripEmissions } from "./trip";
 
@@ -22,6 +23,7 @@ export type TripsContextProps = {
   trips: Trip[];
   addTrip: (items: TripItem[]) => void;
   removeTrip: (id: string) => void;
+  selectTrip: (id: string) => Trip | null;
   clear: () => void;
 };
 
@@ -29,6 +31,8 @@ const TripsContext = createContext<TripsContextProps>({
   trips: [],
   addTrip: (items: TripItem[]) => {},
   removeTrip: (id: string) => {},
+  // @ts-ignore
+  selectTrip: (id: string) => null,
   clear: () => {},
 });
 
@@ -52,10 +56,14 @@ export const TripsProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const removeTrip = (id: string) =>
     setTrips(trips.filter((trip) => trip.id !== id));
 
+  const selectTrip = (id: string) =>
+    trips.find((trip) => trip.id === id) || null;
   const clear = () => setTrips([]);
 
   return (
-    <TripsContext.Provider value={{ trips, addTrip, removeTrip, clear }}>
+    <TripsContext.Provider
+      value={{ trips, addTrip, removeTrip, selectTrip, clear }}
+    >
       {children}
     </TripsContext.Provider>
   );
@@ -93,3 +101,10 @@ export const getMeanTrainRideEmissions = (trips: Trip[]) => {
       );
 };
 
+export const getMeanTransportEmissions = (trips: Trip[]) => {
+  const transportItems = selectTripItems(trips).filter(isTransportItem);
+  return transportItems.length === 0
+    ? null
+    : transportItems.reduce((sum, { data }) => sum + data.kilosCo2, 0) /
+        transportItems.reduce((sum, { data }) => sum + data.distance, 0);
+};

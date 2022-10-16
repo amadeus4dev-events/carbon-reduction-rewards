@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   getTripEmissions,
   getTripName,
@@ -37,25 +38,30 @@ const TripsData = () => {
                 {getTripEmissions(items).toFixed(2)}
               </td>
               <td className="text-right">
-                <button
-                  onClick={() => removeTrip(id)}
-                  className="btn btn-sm btn-square btn-error"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <div className="flex flex-nowrap align-center justify-end">
+                  <Link href={`/trips/offset/${id}`}>
+                    <a className="btn btn-sm">Offset</a>
+                  </Link>
+                  <button
+                    onClick={() => removeTrip(id)}
+                    className="ml-4 btn btn-sm btn-square btn-error"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-4 w-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

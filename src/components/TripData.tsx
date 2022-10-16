@@ -111,6 +111,42 @@ const TripItemSummary = ({ item }: TripItemSummaryProps) => {
   return null;
 };
 
+const FlightRecommendation = ({
+  origin,
+  destination,
+  distance,
+  kilosCo2,
+}: Flight) => {
+  if (origin.countryIsoCode === destination.countryIsoCode) {
+    const trainRideEstimate = 0.016 * distance;
+    const reduction = ((1 - trainRideEstimate / kilosCo2) * 100).toFixed(2);
+
+    return (
+      <div className="break-all">
+        Going by train would save approx. {reduction}% in carbon emissions
+      </div>
+    );
+  }
+
+  return <></>;
+};
+
+interface TripItemRecommendation {
+  item: TripItem;
+}
+
+const TripItemRecommendation = ({ item }: TripItemRecommendation) => {
+  if (isFlightItem(item)) {
+    return <FlightRecommendation {...item.data} />;
+  } else if (isStayItem(item)) {
+    return <></>;
+  } else if (isTrainRideItem(item)) {
+    return <></>;
+  }
+
+  return null;
+};
+
 const TripData = () => {
   const router = useRouter();
   const { addTrip } = useTrips();
@@ -132,6 +168,7 @@ const TripData = () => {
             <tr>
               <th>Type</th>
               <th>Summary</th>
+              <th>Recommendation</th>
               <th className="text-right">
                 CO<sub>2</sub> Emissions (kg)
               </th>
@@ -144,6 +181,9 @@ const TripData = () => {
                 <th>{TRIP_ITEM_TYPE_COMPONENT[item.type]}</th>
                 <td>
                   <TripItemSummary item={item} />
+                </td>
+                <td className="max-w-[3em]">
+                  <TripItemRecommendation item={item} />
                 </td>
                 <td className="text-right">{item.data.kilosCo2.toFixed(2)}</td>
                 <td className="text-right">

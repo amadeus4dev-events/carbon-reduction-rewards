@@ -11,6 +11,7 @@ import {
   getMeanFlightEmissions,
   getMeanStayEmissions,
   getMeanTrainRideEmissions,
+  getMeanTransportEmissions,
   getTripsEmissions,
   isFlightItem,
   Stay,
@@ -48,6 +49,11 @@ const averageNumTrips = mean(peers.map((trips) => trips.length));
 const isNumber = (val: number | null): val is number => val !== null;
 const aggregateMean = (values: number[]) =>
   values.length > 0 ? mean(values) : null;
+
+const meanTransportEmissionsList = peers
+  .map((trips) => getMeanTransportEmissions(trips))
+  .filter(isNumber);
+const meanTransportEmissions = aggregateMean(meanTransportEmissionsList);
 
 const meanFlightEmissionsList = peers
   .map((trips) => getMeanFlightEmissions(trips))
@@ -117,4 +123,5 @@ export const peerStatistics = {
   meanStayEmissions,
   meanTrainRideEmissions,
   meanSustainabilityScore,
+  meanTransportEmissions,
 };
