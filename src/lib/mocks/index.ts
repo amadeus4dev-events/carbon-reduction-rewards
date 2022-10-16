@@ -13,7 +13,6 @@ import {
   getMeanTrainRideEmissions,
   getMeanTransportEmissions,
   getTripsEmissions,
-  isFlightItem,
   Stay,
   TrainRide,
   Trip,
@@ -124,4 +123,101 @@ export const peerStatistics = {
   meanTrainRideEmissions,
   meanSustainabilityScore,
   meanTransportEmissions,
+};
+
+export const getTravelerTier = (relativePerformance: number | null) => {
+  if (relativePerformance === null) {
+    return {
+      name: "n/a",
+      color: "inherit",
+      description: "Start adding your trips",
+      reward: "0 €",
+    };
+  }
+
+  if (relativePerformance < -0.8) {
+    return {
+      name: "Greta",
+      color: "green-500",
+      description: "You are basically Greta Thunberg",
+      reward: "250 €",
+    };
+  }
+
+  if (relativePerformance < -0.6) {
+    return {
+      name: "Platinum",
+      color: "stone-500",
+      description: "You are one of the most green travelers",
+      reward: "150 €",
+    };
+  }
+
+  if (relativePerformance < -0.4) {
+    return {
+      name: "Gold",
+      color: "yellow-500",
+      description: "You lead by example",
+      reward: "100 €",
+    };
+  }
+
+  if (relativePerformance < -0.2) {
+    return {
+      name: "Silver",
+      color: "stone-700",
+      description: "You are making an effort",
+      reward: "50 €",
+    };
+  }
+
+  if (relativePerformance < -0.0) {
+    return {
+      name: "Bronze",
+      color: "orange-700",
+      description: "You are a concious traveler",
+      reward: "25 €",
+    };
+  }
+
+  return {
+    name: "Participant",
+    color: "inherit",
+    description: "Hey, at least your tracking your emissions",
+    reward: "0 €",
+  };
+};
+
+const relativePerformance = (value: number | null, average: number | null) =>
+  value && average ? value / average - 1 : null;
+
+export const getTravelerStatistics = (trips: Trip[]) => {
+  const meanTransportEmissions = getMeanTransportEmissions(trips);
+  const relativeTransportPerformance = relativePerformance(
+    meanTransportEmissions,
+    peerStatistics.meanTransportEmissions
+  );
+  const relativeTier = getTravelerTier(relativeTransportPerformance);
+  const emissions = getTripsEmissions(trips);
+  const numTrips = trips.length;
+  const relativeEmissionsPerformance = relativePerformance(
+    emissions,
+    peerStatistics.averageEmissions
+  );
+  const relativeNumTripsPerformance = relativePerformance(
+    numTrips,
+    peerStatistics.averageNumTrips
+  );
+  const absoluteTier = getTravelerTier(relativeEmissionsPerformance);
+
+  return {
+    meanTransportEmissions,
+    relativeTransportPerformance,
+    relativeTier,
+    emissions,
+    numTrips,
+    relativeEmissionsPerformance,
+    relativeNumTripsPerformance,
+    absoluteTier,
+  };
 };

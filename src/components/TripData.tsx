@@ -122,13 +122,28 @@ const FlightRecommendation = ({
     const reduction = ((1 - trainRideEstimate / kilosCo2) * 100).toFixed(2);
 
     return (
-      <div className="break-all">
-        Going by train would save approx. {reduction}% in carbon emissions
-      </div>
+      <>
+        Save ca. {reduction}% CO<sub>2</sub> via train
+      </>
+    );
+  } else if (distance < 500) {
+    return (
+      <>
+        Save CO<sub>2</sub> by traveling short distances (below 500km) via train
+        or car
+      </>
     );
   }
 
   return <></>;
+};
+
+const StayRecommendation = ({ accommodation: { isSustainable } }: Stay) => {
+  if (!isSustainable) {
+    return <>Your hotel has no sustainability certification.</>;
+  }
+
+  return <>You're staying at a hotel with a sustainability label.</>;
 };
 
 interface TripItemRecommendation {
@@ -139,9 +154,9 @@ const TripItemRecommendation = ({ item }: TripItemRecommendation) => {
   if (isFlightItem(item)) {
     return <FlightRecommendation {...item.data} />;
   } else if (isStayItem(item)) {
-    return <></>;
+    return <StayRecommendation {...item.data} />;
   } else if (isTrainRideItem(item)) {
-    return <></>;
+    return <>Good and green choice!</>;
   }
 
   return null;
@@ -168,7 +183,7 @@ const TripData = () => {
             <tr>
               <th>Type</th>
               <th>Summary</th>
-              <th>Recommendation</th>
+              <th>Assessment</th>
               <th className="text-right">
                 CO<sub>2</sub> Emissions (kg)
               </th>
@@ -182,7 +197,7 @@ const TripData = () => {
                 <td>
                   <TripItemSummary item={item} />
                 </td>
-                <td className="max-w-[3em]">
+                <td className="max-w-[3em] whitespace-normal text-sm">
                   <TripItemRecommendation item={item} />
                 </td>
                 <td className="text-right">{item.data.kilosCo2.toFixed(2)}</td>
