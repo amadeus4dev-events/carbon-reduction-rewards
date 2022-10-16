@@ -5,6 +5,7 @@ import {
   WrenchScrewdriverIcon,
   ArrowLeftOnRectangleIcon,
   GlobeEuropeAfricaIcon,
+  TrophyIcon
 } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -58,6 +59,17 @@ const Sidebar = () => {
                   fill="currentColor"
                 />
                 <span className="ml-3">Sustainability Review</span>
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/leaderboard">
+              <a className={linkClassNames + (isActive("/leaderboard") ? ` ${activeClassNames}` : "" )}>
+                <TrophyIcon
+                  className="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                  fill="currentColor"
+                />
+                <span className="ml-3">Leaderboard</span>
               </a>
             </Link>
           </li>
