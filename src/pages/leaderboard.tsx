@@ -28,7 +28,7 @@ const Leaderboard: NextPage = () => {
                 <th></th>
                 <th>Name</th>
                 <th>Role</th>
-                <th>Emitted CO2 in kg</th>
+                <th>Emitted CO<sub>2</sub> in kg</th>
               </tr>
             </thead>
             <tbody>
@@ -67,7 +67,7 @@ const Leaderboard: NextPage = () => {
                 <th></th>
                 <th>Name</th>
                 <th>Job</th>
-                <th>Favorite Color</th>
+                <th>Emitted CO<sub>2</sub> in kg</th>
               </tr>
             </tfoot>
             
