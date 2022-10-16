@@ -98,8 +98,8 @@ const TripsData = () => {
           </tr>
         </thead>
         <tbody>
-          {trips.map((trip) => (
-            <TripRow trip={trip} removeTrip={removeTrip} />
+          {trips.map((trip, i) => (
+            <TripRow key={i} trip={trip} removeTrip={removeTrip} />
           ))}
         </tbody>
       </table>
