@@ -8,9 +8,9 @@ import basePeers from "./peers.json";
 
 import {
   Flight,
-  getNormalizedFlightEmissions,
-  getNormalizedStayEmissions,
-  getNormalizedTrainRideEmissions,
+  getMeanFlightEmissions,
+  getMeanStayEmissions,
+  getMeanTrainRideEmissions,
   getTripsEmissions,
   isFlightItem,
   Stay,
@@ -49,22 +49,72 @@ const isNumber = (val: number | null): val is number => val !== null;
 const aggregateMean = (values: number[]) =>
   values.length > 0 ? mean(values) : null;
 
-const normalizedFlightEmissions = aggregateMean(
-  peers.map((trips) => getNormalizedFlightEmissions(trips)).filter(isNumber)
-);
+const meanFlightEmissionsList = peers
+  .map((trips) => getMeanFlightEmissions(trips))
+  .filter(isNumber);
+const meanFlightEmissions = aggregateMean(meanFlightEmissionsList);
 
-const normalizedStayEmissions = aggregateMean(
-  peers.map((trips) => getNormalizedStayEmissions(trips)).filter(isNumber)
-);
+const meanStayEmissionsList = peers
+  .map((trips) => getMeanStayEmissions(trips))
+  .filter(isNumber);
+const meanStayEmissions = aggregateMean(meanStayEmissionsList);
 
-const normalizedTrainRideEmissions = aggregateMean(
-  peers.map((trips) => getNormalizedTrainRideEmissions(trips)).filter(isNumber)
+const meanTrainRideEmissionsList = peers
+  .map((trips) => getMeanTrainRideEmissions(trips))
+  .filter(isNumber);
+
+const meanTrainRideEmissions = aggregateMean(meanTrainRideEmissionsList);
+
+const normalizeValue = (value: number | null, values: number[]) => {
+  if (value === null || values.length === 0) {
+    return 0;
+  }
+
+  const min = Math.min(value, ...values);
+  const max = Math.max(value, ...values);
+
+  return (value - min) / (max - min);
+};
+
+export const getSustainabilityScore = (
+  meanFlightEmissions: number | null,
+  meanStayEmissions: number | null,
+  meanTrainRideEmissions: number | null
+) => {
+  const normalizeFlightEmissions = normalizeValue(
+    meanFlightEmissions,
+    meanFlightEmissionsList
+  );
+  const normalizeStayEmissions = normalizeValue(
+    meanStayEmissions,
+    meanStayEmissionsList
+  );
+  const normalizeTrainRideEmissions = normalizeValue(
+    meanTrainRideEmissions,
+    meanTrainRideEmissionsList
+  );
+
+  const score =
+    (normalizeFlightEmissions || 0.5) * 0.5 +
+    (normalizeStayEmissions || 0.5) * 0.3 +
+    (normalizeTrainRideEmissions || 0.5) * 0.2;
+  return Math.trunc(score * 100);
+};
+
+const meanSustainabilityScoreList = peers.map((trips) =>
+  getSustainabilityScore(
+    getMeanFlightEmissions(trips),
+    getMeanStayEmissions(trips),
+    getMeanTrainRideEmissions(trips)
+  )
 );
+const meanSustainabilityScore = aggregateMean(meanSustainabilityScoreList);
 
 export const peerStatistics = {
   averageEmissions,
   averageNumTrips,
-  normalizedFlightEmissions,
-  normalizedStayEmissions,
-  normalizedTrainRideEmissions,
+  meanFlightEmissions,
+  meanStayEmissions,
+  meanTrainRideEmissions,
+  meanSustainabilityScore,
 };

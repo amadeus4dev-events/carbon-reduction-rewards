@@ -66,7 +66,7 @@ export const getTripsEmissions = (trips: Trip[]) =>
 
 const selectTripItems = (trips: Trip[]) => trips.flatMap((trip) => trip.items);
 
-export const getNormalizedFlightEmissions = (trips: Trip[]) => {
+export const getMeanFlightEmissions = (trips: Trip[]) => {
   const flightItems = selectTripItems(trips).filter(isFlightItem);
   return flightItems.length === 0
     ? null
@@ -75,14 +75,14 @@ export const getNormalizedFlightEmissions = (trips: Trip[]) => {
       );
 };
 
-export const getNormalizedStayEmissions = (trips: Trip[]) => {
+export const getMeanStayEmissions = (trips: Trip[]) => {
   const stayItems = selectTripItems(trips).filter(isStayItem);
   return stayItems.length === 0
     ? null
     : mean(stayItems.map(({ data: stay }) => stay.kilosCo2 / stay.nights));
 };
 
-export const getNormalizedTrainRideEmissions = (trips: Trip[]) => {
+export const getMeanTrainRideEmissions = (trips: Trip[]) => {
   const trainRideItems = selectTripItems(trips).filter(isTrainRideItem);
   return trainRideItems.length === 0
     ? null

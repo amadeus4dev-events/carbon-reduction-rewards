@@ -1,12 +1,12 @@
 import { NextPage } from "next";
 import {
-  getNormalizedFlightEmissions,
-  getNormalizedStayEmissions,
-  getNormalizedTrainRideEmissions,
+  getMeanFlightEmissions,
+  getMeanStayEmissions,
+  getMeanTrainRideEmissions,
   getTripsEmissions,
   useTrips,
 } from "../services/trips";
-import { peerStatistics } from "../lib/mocks";
+import { getSustainabilityScore, peerStatistics } from "../lib/mocks";
 import { FC, ReactNode } from "react";
 
 import AwardIcon from "../components/icons/AwardIcon";
@@ -63,9 +63,14 @@ const relativePerformance = (value: number | null, average: number | null) =>
 const Statistics: NextPage = () => {
   const { trips } = useTrips();
 
-  const normalizedFlightEmissions = getNormalizedFlightEmissions(trips);
-  const normalizedStayEmissions = getNormalizedStayEmissions(trips);
-  const normalizedTrainRideEmissions = getNormalizedTrainRideEmissions(trips);
+  const meanFlightEmissions = getMeanFlightEmissions(trips);
+  const meanStayEmissions = getMeanStayEmissions(trips);
+  const meanTrainRideEmissions = getMeanTrainRideEmissions(trips);
+  const sustainabilityScore = getSustainabilityScore(
+    meanFlightEmissions,
+    meanStayEmissions,
+    meanTrainRideEmissions
+  );
   const emissions = getTripsEmissions(trips);
   const numTrips = trips.length;
 
@@ -84,12 +89,12 @@ const Statistics: NextPage = () => {
       <h2 className="mt-6 text-2xl font-bold dark:text-grey-400">
         Your Impact
       </h2>
-      <div className="mt-4 stats shadow-lg">
+      <div className="w-full mt-4 stats shadow-lg">
         <Stat
           title="Relative Flight Performance"
           value={relativePerformance(
-            normalizedFlightEmissions,
-            peerStatistics.normalizedFlightEmissions
+            meanFlightEmissions,
+            peerStatistics.meanFlightEmissions
           )}
           description="You emit less per km flown"
           color="primary"
@@ -99,8 +104,8 @@ const Statistics: NextPage = () => {
         <Stat
           title="Relative Hotel Performance"
           value={relativePerformance(
-            normalizedStayEmissions,
-            peerStatistics.normalizedStayEmissions
+            meanStayEmissions,
+            peerStatistics.meanStayEmissions
           )}
           description="You are choosing more sustainable hotels"
           color="purple-500"
@@ -110,8 +115,8 @@ const Statistics: NextPage = () => {
         <Stat
           title="Relative Train Performance"
           value={relativePerformance(
-            normalizedTrainRideEmissions,
-            peerStatistics.normalizedTrainRideEmissions
+            meanTrainRideEmissions,
+            peerStatistics.meanTrainRideEmissions
           )}
           description="You emit less per km traveled"
           color="cyan-500"
@@ -119,7 +124,7 @@ const Statistics: NextPage = () => {
         />
       </div>
 
-      <div className="mt-4 stats shadow-lg">
+      <div className="w-full mt-4 stats shadow-lg">
         <Stat
           title={
             <>
@@ -148,19 +153,22 @@ const Statistics: NextPage = () => {
 
         <Stat
           title="Sustainability Score"
-          value="74/100"
-          description="12% better than your peers"
+          value={`${sustainabilityScore}/100`}
+          description={`${relativePerformance(
+            sustainabilityScore,
+            peerStatistics.meanSustainabilityScore
+          )} better than your peers`}
           color="purple-500"
           icon={TreeIcon}
         />
-
+        {/* 
         <Stat
           title="Reward Points"
           value="400"
           description="Buy offsets, donations, gift cards"
           color="primary"
           icon={AwardIcon}
-        />
+        /> */}
       </div>
 
       <div className="overflow-x-auto">
