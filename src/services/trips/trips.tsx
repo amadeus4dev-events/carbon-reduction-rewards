@@ -8,7 +8,8 @@ import {
 } from "react";
 import createPersistedState from "use-persisted-state";
 import { nanoid } from "nanoid";
-import { mean } from "simple-statistics";
+import { mean, quantileRankSorted } from "simple-statistics";
+import { gaussian } from "gaussian";
 import {
   TripItem,
   Trip,
@@ -91,4 +92,9 @@ export const getMeanTrainRideEmissions = (trips: Trip[]) => {
           ({ data: trainRide }) => trainRide.kilosCo2 / trainRide.distance
         )
       );
+};
+
+export const getMeanPercentile = (avg, yourEmissions) => {
+  var distribution = gaussian(avg, avg/8);
+  return quantileRankSorted(distribution, yourEmissions);
 };

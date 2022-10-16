@@ -13,6 +13,7 @@ import AwardIcon from "../components/icons/AwardIcon";
 import LungsIcon from "../components/icons/LungsIcon";
 import AirplaneIcon from "../components/icons/AirplaneIcon";
 import TreeIcon from "../components/icons/TreeIcon";
+import HouseIcon from "../components/icons/HouseIcon";
 
 /**
  * Individual Stats: CO_2 emitted, number of trips, money from bonuses, trips left this year
@@ -109,7 +110,7 @@ const Statistics: NextPage = () => {
           )}
           description="You are choosing more sustainable hotels"
           color="purple-500"
-          icon={AirplaneIcon}
+          icon={HouseIcon}
         />
 
         <Stat
