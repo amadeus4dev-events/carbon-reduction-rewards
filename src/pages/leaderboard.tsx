@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { FC, ReactNode } from "react";
 import { TrophyIcon } from "@heroicons/react/24/solid";
-import { peers } from "../lib/mocks";
+import { peers, getTravelerStatistics } from "../lib/mocks";
 import people from "../lib/mocks/people.json";
 
 const Leaderboard: NextPage = () => {
@@ -32,8 +32,8 @@ const Leaderboard: NextPage = () => {
               </tr>
             </thead>
             <tbody>
-              {people.map((person, i) => (
-                <tr key={person.uid} className={`${i == 1 ? "active" : ""}`}>
+              {peers.sort((p1, p2) => getTravelerStatistics(p1).emissions - getTravelerStatistics(p2).emissions).map((peer, i) => (
+                <tr key={people[i].uid} className={`${i == 1 ? "active" : ""}`}>
                   <td>
                     {i < 3 ? (
                       <TrophyIcon
@@ -46,19 +46,19 @@ const Leaderboard: NextPage = () => {
                     <div className="flex items-center space-x-3">
                       <div className="avatar">
                         <div className="mask mask-circle w-12 h-12">
-                          <img src={`https://placeimg.com/192/192/people?k=${person.uid}`} />
+                          <img src={`https://placeimg.com/192/192/people?k=${people[i].uid}`} />
                         </div>
                       </div>
                       <div>
-                        <div className="font-bold">{person.first_name} {person.last_name}</div>
-                        <div className="text-sm opacity-50">{person.address.country}</div>
+                        <div className="font-bold">{people[i].first_name} {people[i].last_name}</div>
+                        <div className="text-sm opacity-50">{people[i].address.country}</div>
                       </div>
                     </div>
                   </td>
                   <td>
-                      {person.employment.title}
+                      {people[i].employment.title}
                   </td>
-                  <td>12.0</td>
+                  <td>{getTravelerStatistics(peer).emissions.toFixed(1)}</td>
                 </tr>
               ))}
             </tbody>
