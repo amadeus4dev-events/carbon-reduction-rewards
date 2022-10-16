@@ -33,7 +33,7 @@ const Leaderboard: NextPage = () => {
             </thead>
             <tbody>
               {people.map((person, i) => (
-                <tr key={person.uid}>
+                <tr key={person.uid} className={`${i == 1 ? "active" : ""}`}>
                   <td>
                     {i < 3 ? (
                       <TrophyIcon
