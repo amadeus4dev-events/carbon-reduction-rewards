@@ -39,10 +39,8 @@ const StayForm = ({ setNights, setResults }: StayFormProps) => {
           keyword,
         },
       });
-      console.log(status, data);
 
       if (status === 200) {
-        console.log(data);
         setNights(nights);
         setResults(data);
       } else {

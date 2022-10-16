@@ -90,7 +90,7 @@ export default async function handler(
     },
   });
 
-  const multiplier = Number(isReturn) + 1;
+  const multiplier = Number(isReturn === "true") + 1;
   let kilosCo2 = data.kilosCo2 ?? data.kilosCo2e ?? data.km * AVERAGE_KG_PER_KM;
   kilosCo2 = kilosCo2 * multiplier;
 

@@ -48,7 +48,6 @@ const FlightForm = () => {
       });
 
       if (status === 200) {
-        console.log(data);
         addFlight({
           origin,
           destination,

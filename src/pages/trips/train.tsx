@@ -42,7 +42,6 @@ const TrainForm = () => {
       });
 
       if (status === 200) {
-        console.log(data);
         addTrainRide({
           origin,
           destination,

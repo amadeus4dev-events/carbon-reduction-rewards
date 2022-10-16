@@ -62,7 +62,7 @@ const relativePerformance = (value: number | null, average: number | null) =>
 
 const Statistics: NextPage = () => {
   const { trips } = useTrips();
-  console.log(trips);
+
   const normalizedFlightEmissions = getNormalizedFlightEmissions(trips);
   const normalizedStayEmissions = getNormalizedStayEmissions(trips);
   const normalizedTrainRideEmissions = getNormalizedTrainRideEmissions(trips);
