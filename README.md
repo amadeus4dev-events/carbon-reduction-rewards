@@ -1,34 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Carbonify
 
-## Getting Started
+[Find the hosted version of our app here](https://carbon-reduction-rewards.vercel.app/trips)
 
-First, run the development server:
+## Project Idea
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+We've spent 48 hours researching, scoping and building carbonify.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+With carbonify we're allowing employers to disincentivise unnecessary emissions from business travel. To do this we grant cash rewards to those employees who reduce their emissions during every quarter.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Employees use our web app to enter the data of their trips. We subsequently calculate the emissions of their trip and provide comparisons to global averages and their company peers.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Sustainable Coding Practices
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- Server-Side rendering to achieve greater server resource utilization instead of offloading work to client devices
+- Offline capability to save on bandwith
+- No unused features
+- Local caching of almost all data provided by the backend
+- Asynchronous methods calls everywhere to not block any resources
 
-## Learn More
+## Technology & APIs
 
-To learn more about Next.js, take a look at the following resources:
+- Next.js: Next.js is a React framework which allows us to provide a web-based frontend as well as custom backend API routes.
+- Amadeus Self Service: We use the Amadeus self-service API to let users search for hotels and add them to a trip.
+- Chooose: We use the Chooose API to calculate emissions of flights, train rides and hotel stays.
+- TripAdvisor: We scraped TripAdvisor for the sustainability data of their listed hotels. We then trained a machine learning model with Python based on a paper by [Hoffmann et. al (2022)](https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-022-00354-6) which allows us to predict the sustainability of hotels not included in the TripAdvisor dataset. Finally, we exported the model from a Python-specific data format to a format we can directly use in our JavaScript backend.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Datasets
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Flight emissions: ICAO Carbon Emissions Calculator Methodology, Version 11
+- Train emissions: European Environment Agency: average rail emissions in the EU per passenger-km
+- Hotel emissions: Hotel sustainability benchmarking index 2021
+- Trip Advisor: Scraped hotel sustainability data set
